@@ -10,6 +10,8 @@ type TableOfContentStore = {
   anchors: AnchorDef[];
   tableOfContent: NodeDef[];
   activeIndex: number;
+  activePath: number[];
+  expandAll?: boolean;
 };
 
 export type AnchorDef = {
@@ -49,7 +51,9 @@ export type NodeDef = AnchorDef & {
 const initialStore: TableOfContentStore = {
   anchors: [],
   tableOfContent: [],
-  activeIndex: null
+  activeIndex: null,
+  activePath: [],
+  expandAll: true
 };
 
 export const { Provider, useStore } = createStore<TableOfContentStore>(initialStore);

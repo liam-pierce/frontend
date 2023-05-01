@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import React, { MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from './Provider';
-import { getValueFromPath, setValueFromPath } from './utils';
+import { arraySubset, getValueFromPath, setValueFromPath } from './utils';
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -148,19 +148,18 @@ type NodeProps = {
 
 export const WrappedNode: React.FC<NodeProps> = ({ path = [], depth = 0 }) => {
   const classes = useStyles();
-
-  const [open, setOpen] = useState<boolean>(true);
-
+  const [open, setOpen] = useState<boolean>(false);
   const ref = useRef<HTMLLIElement>();
-
-  // const { onLinkCreate, onLinkClick } = useMyToc();
-
   const [node, setStore] = useStore(store => getValueFromPath(store.tableOfContent, path));
-
+  const [expandAll] = useStore(store => store.expandAll);
+  const [activePath] = useStore(store => store.activePath);
   const appBarHeight = useMemo(() => Math.floor(document.getElementById('appbar').getBoundingClientRect().height), []);
-
+  const isExpanded = useMemo<boolean>(
+    () => expandAll || arraySubset(path, activePath) || open,
+    [activePath, expandAll, open, path]
+  );
   const hasSubNodes = useMemo<boolean>(
-    () => true || ('subNodes' in node && Array.isArray(node.subNodes) && node.subNodes.length > 0),
+    () => 'subNodes' in node && Array.isArray(node.subNodes) && node.subNodes.length > 0,
     [node]
   );
 
@@ -175,14 +174,14 @@ export const WrappedNode: React.FC<NodeProps> = ({ path = [], depth = 0 }) => {
   }, []);
 
   useEffect(() => {
-    setStore(store => {
-      return { tableOfContent: setValueFromPath(store.tableOfContent, path, { key: 'link', value: ref.current }) };
-    });
+    setStore(store => ({
+      tableOfContent: setValueFromPath(store.tableOfContent, path, { key: 'link', value: ref.current })
+    }));
   }, [path, setStore]);
 
   return (
     <>
-      <Typography ref={ref} component="li" className={classes.li} style={{ marginLeft: `calc(${depth}*10px)` }}>
+      <Typography ref={ref} component="li" className={classes.li}>
         <Link
           className={classes.link}
           children={node.title}
@@ -190,11 +189,12 @@ export const WrappedNode: React.FC<NodeProps> = ({ path = [], depth = 0 }) => {
           to={`${window.location.search}#${node.hash}`}
           tabIndex={-1}
           onClick={handleClick}
+          style={{ paddingLeft: `calc(${depth + 1}*10px)` }}
         />
         {hasSubNodes && (
-          <div className={clsx('expand', classes.expandContainer, open && 'visible')}>
+          <div className={clsx('expand', classes.expandContainer, isExpanded && !expandAll && 'visible')}>
             <IconButton
-              className={clsx(classes.expandIconButton, open && classes.expanded)}
+              className={clsx(classes.expandIconButton, isExpanded && !expandAll && classes.expanded)}
               size="small"
               onClick={e => handleCollapseClick(e)}
             >
@@ -204,7 +204,7 @@ export const WrappedNode: React.FC<NodeProps> = ({ path = [], depth = 0 }) => {
         )}
       </Typography>
       {hasSubNodes && (
-        <Collapse /*in={node.collapse}*/ in={open} timeout="auto" unmountOnExit component="ul" className={classes.ul}>
+        <Collapse in={isExpanded} timeout="auto" unmountOnExit component="ul" className={classes.ul}>
           {node.subNodes.map((_, i) => (
             <Node key={`${node.subNodes[i].hash}`} path={[...path, i]} depth={depth + 1} />
           ))}

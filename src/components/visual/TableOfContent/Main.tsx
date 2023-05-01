@@ -134,7 +134,7 @@ export const WrappedMain = ({ children }: MainProps) => {
           const node2 = getValueFromPath(store.tableOfContent, store.anchors[index]?.path);
           node2?.link?.classList?.add(classes.active);
 
-          return { activeIndex: index };
+          return { activeIndex: index, activePath: store.anchors[index].path };
         });
       });
     };

@@ -1,6 +1,8 @@
-import { Typography } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { IconButton, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import React from 'react';
+import clsx from 'clsx';
+import React, { MouseEventHandler, useCallback } from 'react';
 import { Node } from './Node';
 import { useStore } from './Provider';
 
@@ -135,17 +137,40 @@ const useStyles = makeStyles(theme => ({
   },
   expanded: {
     transform: 'rotate(0deg)'
+  },
+  title: {
+    flex: 1,
+    textDecoration: 'none',
+    padding: '0px 8px 0px 0px',
+    margin: '4px 0px 8px'
   }
 }));
 
 export const WrappedSection = () => {
   const classes = useStyles();
-
   const [tableOfContent, setStore] = useStore(store => store.tableOfContent);
+  const [expandAll] = useStore(store => store.expandAll);
+
+  const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(() => {
+    setStore(store => ({ expandAll: !store.expandAll }));
+  }, [setStore]);
 
   return (
     <>
-      <Typography variant="body1" children={'Contents'} />
+      <Typography className={clsx(classes.li)} component="div" variant="body1">
+        <div className={classes.title}>
+          <span>{'Contents'}</span>
+        </div>
+        <div className={clsx('expand', classes.expandContainer, expandAll && 'visible')}>
+          <IconButton
+            className={clsx(classes.expandIconButton, expandAll && classes.expanded)}
+            size="small"
+            onClick={handleClick}
+          >
+            <ExpandMoreIcon fontSize="inherit" />
+          </IconButton>
+        </div>
+      </Typography>
       <Typography component="ul" className={classes.ul} variant="body1">
         {tableOfContent.map((_, i) => (
           <Node key={`${tableOfContent[i].hash}`} path={[i]} depth={0} />

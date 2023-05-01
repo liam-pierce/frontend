@@ -15,6 +15,7 @@ const AdminErrorDetail = lazy(() => import('components/routes/admin/error_detail
 const AdminErrorViewer = lazy(() => import('components/routes/admin/error_viewer'));
 const AdminIdentify = lazy(() => import('components/routes/admin/identify'));
 const AdminServices = lazy(() => import('components/routes/admin/services'));
+const Archive = lazy(() => import('components/routes/archive'));
 const Service = lazy(() => import('components/routes/admin/service_detail'));
 const ServiceReview = lazy(() => import('components/routes/admin/service_review'));
 const AdminSiteMap = lazy(() => import('components/routes/admin/site_map'));
@@ -33,6 +34,7 @@ const HelpApiDoc = lazy(() => import('components/routes/help/api'));
 const HelpClassification = lazy(() => import('components/routes/help/classification'));
 const HelpConfiguration = lazy(() => import('components/routes/help/configuration'));
 const HelpSearch = lazy(() => import('components/routes/help/search'));
+const HelpSearch2 = lazy(() => import('components/routes/help/search2'));
 const HelpServices = lazy(() => import('components/routes/help/services'));
 const Logout = lazy(() => import('components/routes/logout'));
 const Manage = lazy(() => import('components/routes/manage'));
@@ -55,6 +57,8 @@ const Submissions = lazy(() => import('components/routes/submissions'));
 const Submit = lazy(() => import('components/routes/submit'));
 const Tos = lazy(() => import('components/routes/tos'));
 const User = lazy(() => import('components/routes/user'));
+const Test = lazy(() => import('components/routes/test'));
+const Test2 = lazy(() => import('components/routes/test2'));
 
 const APP_NAME = 'AL4';
 
@@ -112,6 +116,7 @@ const WrappedRoutes = () => {
         <Route path="/admin/tag_safelist" element={<AdminTagSafelist />} />
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/admin/users/:id" element={<User />} />
+        <Route path="/archive" element={<Archive />} />
         <Route path="/authorize" element={<AppRegistration />} />
         <Route path="/crash" element={<CrashTest />} />
         <Route path="/dashboard" element={<Dashboard />} />
@@ -122,6 +127,7 @@ const WrappedRoutes = () => {
         <Route path="/help/classification" element={<HelpClassification />} />
         <Route path="/help/configuration" element={<HelpConfiguration />} />
         <Route path="/help/search" element={<HelpSearch />} />
+        <Route path="/help/search2" element={<HelpSearch2 />} />
         <Route path="/help/services" element={<HelpServices />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/manage/heuristics" element={<ManageHeuristics />} />
@@ -146,6 +152,8 @@ const WrappedRoutes = () => {
         <Route path="/submission/report/:id" element={<SubmissionReport />} />
         <Route path="/submission/:id" element={<RedirectSubmission />} />
         <Route path="/submissions" element={<Submissions />} />
+        <Route path="/test" element={<Test />} />
+        <Route path="/test2" element={<Test2 />} />
         <Route path="/tos" element={<Tos />} />
         <Route path="/forbidden" element={<ForbiddenPage />} />
         <Route path="/notfound" element={<NotFoundPage />} />

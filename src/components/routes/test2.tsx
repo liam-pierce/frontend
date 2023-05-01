@@ -1,5 +1,5 @@
 import { Grid, Typography } from '@mui/material';
-import { Anchor, TableOfContent } from 'commons/addons/toc/Toc2';
+import { Anchor, TableOfContent } from 'components/visual/TableOfContent';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -43,15 +43,15 @@ export const Test = () => {
       <Grid container alignItems="center">
         <div style={{ height: '200px' }} />
 
-        <Anchor level={0}>
+        {/* <Anchor level={0}>
           <Typography variant="h2">1. This is a test</Typography>
         </Anchor>
 
-        <Typography component={Anchor} variant="h2" children={'3. This is a typography'} level={2} />
+        <Typography component={Anchor} variant="h2" children={'3. This is a typography'} level={2} /> */}
 
         {toc.map(item => (
           <Grid key={item.label} item xs={12}>
-            <Typography component={Anchor} variant="h2" level={item.level}>
+            <Typography component={Anchor} variant="h2" level={item.level} label={item.label}>
               {`Title ${item.label}`}
             </Typography>
             <p>

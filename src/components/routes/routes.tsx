@@ -57,6 +57,7 @@ const Submit = lazy(() => import('components/routes/submit'));
 const Tos = lazy(() => import('components/routes/tos'));
 const User = lazy(() => import('components/routes/user'));
 const Test = lazy(() => import('components/routes/test'));
+const Test2 = lazy(() => import('components/routes/test2'));
 
 const APP_NAME = 'AL4';
 
@@ -150,6 +151,7 @@ const WrappedRoutes = () => {
         <Route path="/submission/:id" element={<RedirectSubmission />} />
         <Route path="/submissions" element={<Submissions />} />
         <Route path="/test" element={<Test />} />
+        <Route path="/test2" element={<Test2 />} />
         <Route path="/tos" element={<Tos />} />
         <Route path="/forbidden" element={<ForbiddenPage />} />
         <Route path="/notfound" element={<NotFoundPage />} />

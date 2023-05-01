@@ -4,7 +4,7 @@ import { Button } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import clsx from 'clsx';
 import useClipboard from 'commons/components/utils/hooks/useClipboard';
-import React, { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import React, { MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnchorDef, useStore } from './Provider';
 
@@ -56,6 +56,8 @@ export const WrappedAnchor = ({
   const [hash, setHash] = useState<string>(null);
   const ref = useRef<HTMLSpanElement>();
 
+  const appBarHeight = useMemo(() => Math.floor(document.getElementById('appbar').getBoundingClientRect().height), []);
+
   const nextPath = useCallback((path: number[] = [0], depth: number = 0): number[] => {
     let next = [];
     for (let i = 0; i <= depth; ++i) {
@@ -81,10 +83,10 @@ export const WrappedAnchor = ({
   );
 
   const handleClick: MouseEventHandler<HTMLAnchorElement> = useCallback(() => {
-    ref.current.scrollIntoView({ behavior: 'smooth' } as ScrollIntoViewOptions);
+    document.getElementById('app-scrollct').scrollTo({ top: ref.current.offsetTop - appBarHeight, behavior: 'smooth' });
     const { origin, pathname, search } = window.location;
     copy(`${origin}${pathname}${search}#${hash}`);
-  }, [copy, hash]);
+  }, [appBarHeight, copy, hash]);
 
   useEffect(() => {
     setStore(store => {

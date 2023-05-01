@@ -1,5 +1,5 @@
 import makeStyles from '@mui/styles/makeStyles';
-import React, { useCallback, useEffect, useTransition } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useTransition } from 'react';
 import { AnchorDef, NodeDef, useStore } from './Provider';
 import Section from './Section';
 import { getValueFromPath } from './utils';
@@ -104,17 +104,21 @@ export const WrappedMain = ({ children }: MainProps) => {
     } else return { _anchors, _nodes };
   }, []);
 
-
-
   useEffect(() => {
     setStore(store => ({ tableOfContent: formatNodes(anchors)._nodes }));
   }, [anchors, formatNodes, setStore]);
 
-  // Select the active anchor on page scroll
+  useLayoutEffect(() => {
+    const item = anchors?.find(anchor => anchor.hash === window?.location?.hash?.slice(1));
+    if (!item) return;
+    item.element.scrollIntoView({ behavior: 'smooth' } as ScrollIntoViewOptions);
+  }, [anchors]);
+
   useEffect(() => {
     const onScroll = () => {
       startScrollTransition(() => {
         setStore(store => {
+          if (store.tableOfContent.length === 0) return {};
           const appBarHeight = document.getElementById('appbar').getBoundingClientRect().height;
           let index = store.anchors.length - 1;
           while (index >= 0) {
@@ -130,15 +134,6 @@ export const WrappedMain = ({ children }: MainProps) => {
           const node2 = getValueFromPath(store.tableOfContent, store.anchors[index]?.path);
           node2?.link?.classList?.add(classes.active);
 
-          // console.log(
-          //   index,
-          //   store.anchors[index]?.path,
-          //   store.tableOfContent,
-          //   getValueFromPath(store.tableOfContent, store.anchors[index]?.path)
-          // );
-
-          // store.anchors[store.activeIndex]?.link?.classList?.remove(classes.active);
-          // store.anchors[index]?.link?.classList?.add(classes.active);
           return { activeIndex: index };
         });
       });

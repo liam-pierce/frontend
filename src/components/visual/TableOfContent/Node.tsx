@@ -157,10 +157,18 @@ export const WrappedNode: React.FC<NodeProps> = ({ path = [], depth = 0 }) => {
 
   const [node, setStore] = useStore(store => getValueFromPath(store.tableOfContent, path));
 
+  const appBarHeight = useMemo(() => Math.floor(document.getElementById('appbar').getBoundingClientRect().height), []);
+
   const hasSubNodes = useMemo<boolean>(
     () => true || ('subNodes' in node && Array.isArray(node.subNodes) && node.subNodes.length > 0),
     [node]
   );
+
+  const handleClick: MouseEventHandler<HTMLAnchorElement> = useCallback(() => {
+    document
+      .getElementById('app-scrollct')
+      .scrollTo({ top: node.element.offsetTop - appBarHeight, behavior: 'smooth' });
+  }, [appBarHeight, node.element]);
 
   const handleCollapseClick: MouseEventHandler<HTMLButtonElement> = useCallback(event => {
     setOpen(o => !o);
@@ -181,9 +189,7 @@ export const WrappedNode: React.FC<NodeProps> = ({ path = [], depth = 0 }) => {
           data-no-markdown-link={node.hash}
           to={`${window.location.search}#${node.hash}`}
           tabIndex={-1}
-          onClick={event => {
-            // onLinkClick(event, { ...node, link: ref.current });
-          }}
+          onClick={handleClick}
         />
         {hasSubNodes && (
           <div className={clsx('expand', classes.expandContainer, open && 'visible')}>

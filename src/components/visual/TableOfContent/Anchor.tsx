@@ -91,8 +91,8 @@ export const WrappedAnchor = ({
   useEffect(() => {
     setStore(store => {
       const path: number[] = getNextPath(store.anchors, level);
-      const title: string = label || ref?.current?.innerText.replace(/\s/g, '-');
-      const newHash: string = `${path.map(p => p + 1).join('.')}-${title}`;
+      const title: string = label || ref?.current?.innerText;
+      const newHash: string = `${path.map(p => p + 1).join('.')}-${title.replace(/\s/g, '-')}`;
       setHash(newHash);
       return { anchors: [...store.anchors, { hash: newHash, level, path, element: ref.current, title }] };
     });

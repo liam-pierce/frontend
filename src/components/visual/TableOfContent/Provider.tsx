@@ -53,7 +53,7 @@ const initialStore: TableOfContentStore = {
   tableOfContent: [],
   activeIndex: null,
   activePath: [],
-  expandAll: true
+  expandAll: false
 };
 
 export const { Provider, useStore } = createStore<TableOfContentStore>(initialStore);
